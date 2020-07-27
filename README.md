@@ -37,30 +37,28 @@ But if you want to have the package linked to the module source, you can use som
 Just remember that if you delete your source dir the module breaks
 
 ## How to use
-See code examples for detail, but TL;DR is:
-from takpak.mkcot import mkcot
-from takpak.takcot import takcot
+See code examples for detail, but TL;DR is:<br/>
+from takpak.mkcot import mkcot<br/>
+from takpak.takcot import takcot<br/>
 
 Then use the various methods:
--# substantiate the class
+-# substantiate the class<br/>
 takserver = takcot()
 
--# Open the socket
+-# Open the socket<br/>
 testsock = takserver.takopen(IP_addr) # assumes port 8087, you can override
 
--# create a CoT (this is a really basic one to connect with)
+-# create a CoT (this is a really basic one to connect with)<br/>
 cot_xml = mkcot.mkcot(cot_type="t", cot_how="h-g-i-g-o")
 
--# then send a cot, the first one FTS interprets as a "Connection"
+-# then send a cot, the first one FTS interprets as a "Connection"<br/>
 takserver.taksend(cot_xml) # again, many params you can override
 
--# Then read the result if interested
+-# Then read the result if interested<br/>
 print(takserver.takread())  # read all the server CoT's, will send last several it has + the connect
 
--# close the connection when done to prevent errors on the server
+-# close the connection when done to prevent errors on the server<br/>
 takserver.takclose()
-
-
 
 ## Contribute
 
@@ -75,8 +73,6 @@ While takpak is original code, it would not be possible without the multitude of
 Push_cursor_on_target (PCOT)was a bit of inspiration. While quite old, and not functional for server use, it did provide one example of how CoT generation and sending to a client could be done. I chose a different direction for my code, as the CoT generation and server interaction are two separate libraries. The ID and Dimension list definitions were used from their code, as there are only so many ways to capture a standard definitions like CoT uses in Python. The Element Tree method of building XML's that PCOT used also informed my code development. Again, there are only so many ways to efficiently create XMLS's in python.
 
 CoT (Cursor on Target) format, definitions, etc are widely documented on the web and were invalable for understanding how to create a CoT. But blackbox reverse engineering of how the ATAK/CIVTAK client interacted via network traces and instrumentation was required to generate CoT's acceptible by modern servers.  
-
-
 
 ## License
 This code is licensed under GPL3. Please note this means that any derivative code would need to be also released under the same license. 
