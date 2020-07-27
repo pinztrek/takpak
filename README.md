@@ -36,6 +36,9 @@ See code examples.
 
 If you want to contribute please direct message/email me. I'll need a real email address or github account name, along with a short description of the project you are using it for. 
 
+## Collaboration Approach
+Please do not commit to the master branch without discussion. Ideally, we probably need to use the "Fork and Pull Request" model. (See https://reflectoring.io/github-fork-and-pull/ if not familiar). This will allow us to use pull requests and review before committing changes to the master. Alternatively, at least create your own dev branch. But this (I think) makes it a bit harder to tell when edits are ready to be integrated. 
+
 ## Credits
 While takpak is original code, it would not be possible without the multitude of tools and projects that provided insight into how TAK servers behave, and how to interact with them. This is primarily FreeTakServer (https://github.com/FreeTAKTeam/FreeTakServer) and ATAK/CIVTAK (https://www.civtak.org/). 
 
