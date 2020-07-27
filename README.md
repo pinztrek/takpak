@@ -48,4 +48,4 @@ CoT (Cursor on Target) format, definitions, etc are widely documented on the web
 ## License
 This code is licensed under GPL3. Please note this means that any derivative code would need to be also released under the same license. 
 
-GPL3 © [Yourname]()
+GPL3 © Alan Barrow
