@@ -1,4 +1,3 @@
-## Project title
 # takpak
 Python Library and sample code to create CoT's and send them to a TAK server
 
