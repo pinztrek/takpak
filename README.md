@@ -46,7 +46,7 @@ Then use the various methods:<br/>
 takserver = takcot()
 
 -# Open the socket<br/>
-testsock = takserver.takopen(IP_addr) # assumes port 8087, you can override
+testsock = takserver.takopen("172.16.30.30") # assumes port 8087, you can override
 
 -# create a CoT (this is a really basic one to connect with)<br/>
 cot_xml = mkcot.mkcot(cot_type="t", cot_how="h-g-i-g-o")
