@@ -5,13 +5,13 @@ import uuid
 #from socket import getfqdn
 import socket 
 
-#import takcot as TC
-from takpak.takcot import takcot
+#import takcot. Note this only works if you have installed the package
+#   If you have not installed as a package, you may have to tune your imports
+#   to be local to where your source is
 from takpak.mkcot import mkcot
+from takpak.takcot import takcot
 
 #logging.basicConfig(level=logging.INFO) # level=10
-
-sleeptime = 0.075
 
 TAK_IP = '172.16.30.30'
 TAK_PORT = 8087
@@ -33,39 +33,34 @@ testsock = takserver.takopen(TAK_IP)
 #print(testsock)
 
 
-#connect_xml=cot_xml
 print()
 print("send a connect")
 takserver.takflush()  # flush the xmls the server sends
 #print(takserver.takread())  # read all the server CoT's, will send last + the connct
 
+connect_xml = mkcot.mkcot(cot_type="t", cot_how="h-g-i-g-o")
+print("Connect XML is:")
+print(connect_xml)
+
 # send the connect string, server does not echo
 takserver.taksend(mkcot.mkcot(cot_type="t", cot_how="h-g-i-g-o")) 
+# send the connect string, server does not echo
 
-#print("read the Connect response")
-#print(takserver.takread())  # read all the server CoT's, will send last + the connct
+#time.sleep(5)
+print("read the Connect response")
+print(takserver.takread())  # read all the server CoT's, will send last + the connct
 
-print("Flush the server response")
-takserver.takflush()  # flush the xmls the server sends
-time.sleep(1)
+#print("Flush the server response")
+#takserver.takflush()  # flush the xmls the server sends
+#time.sleep(3)
 
-for i in range(10):
-    print()
-    print("send a cot")
-    takserver.takflush()  # flush the xmls the server sends
-    #takserver.taksend(cot_xml)
-    takserver.taksend(mkcot.mkcot(cot_identity="friend"
-        , cot_stale = 1
-        , cot_dimension="land-unit",cot_typesuffix="E-C-T"
-        , cot_lat=33+i/20, cot_lon=-84+i/20))
+#for i in range(10):
+while True:
     print()
 
-    time.sleep(1)
-    print("read the response")
-    print(takserver.takread())
-
-
-time.sleep(5)
+    print("wait for a server CoT")
+    print(takserver.takread(readtimeout=10))
+    time.sleep(0.1)
 
 # Always need to close out the connection
 # good practice to include reading anything the server pushed
@@ -75,3 +70,5 @@ time.sleep(5)
 
 print("Closing TAK Server")
 takserver.takclose()
+
+

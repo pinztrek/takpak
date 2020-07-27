@@ -101,6 +101,3 @@ class takcot():
 
         return response
 
-        
-#    def __init__(self):
-#        self.sock = None

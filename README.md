@@ -27,10 +27,38 @@ The takpak library consists of two python3 classes:
 See the two sample programs (sendcot.py and readcots.py)
 
 ## Installation
-No real install. Just import the classes into your code. Usually best to keep it in a subdirectory. Down the road I may release via PIP.
+The best method is to save the source to something like /opt/takpak and then pip (or pip3) install from there. 
+
+But if you want to have the package linked to the module source, you can use something like this from the top takpak directory:
+* pip3 install -e .
+
+Just remember that if you delete your source dir the module breaks
 
 ## How to use
-See code examples.
+See code examples for detail, but TL;DR is:
+from takpak.mkcot import mkcot
+from takpak.takcot import takcot
+
+Then use the various methods:
+-# substantiate the class
+takserver = takcot()
+
+-# Open the socket
+testsock = takserver.takopen(IP_addr) # assumes port 8087, you can override
+
+-# create a CoT (this is a really basic one to connect with)
+cot_xml = mkcot.mkcot(cot_type="t", cot_how="h-g-i-g-o")
+
+-# then send a cot, the first one FTS interprets as a "Connection"
+takserver.taksend(cot_xml) # again, many params you can override
+
+-# Then read the result if interested
+print(takserver.takread())  # read all the server CoT's, will send last several it has + the connect
+
+-# close the connection when done to prevent errors on the server
+takserver.takclose()
+
+
 
 ## Contribute
 
