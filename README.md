@@ -23,6 +23,9 @@ The takpak library consists of two python3 classes:
     * takread() Attempts read from the server, and returns it. Will loop readattempts times, and the timeout can be set. 
 * mkcot.py
 
+## Prerequisites
+python 3.x. In fact, the libraries and code will give very non-intuitive "almost working" behavior sometimes under older pythons. Main development was on 3.8.
+
 ## Code Example
 See the two sample programs (sendcot.py and readcots.py)
 
