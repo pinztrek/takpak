@@ -41,7 +41,7 @@ See code examples for detail, but TL;DR is:<br/>
 from takpak.mkcot import mkcot<br/>
 from takpak.takcot import takcot<br/>
 
-Then use the various methods:
+Then use the various methods:<br/>
 -# substantiate the class<br/>
 takserver = takcot()
 
