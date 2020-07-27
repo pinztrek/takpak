@@ -29,8 +29,8 @@ See the two sample programs (sendcot.py and readcots.py)
 ## Installation
 No real install. Just import the classes into your code. Usually best to keep it in a subdirectory. Down the road I may release via PIP.
 
-## How to use?
-To be updated
+## How to use
+See code examples.
 
 ## Contribute
 
@@ -39,11 +39,11 @@ If you want to contribute please direct message/email me. I'll need a real email
 ## Credits
 While takpak is original code, it would not be possible without the multitude of tools and projects that provided insight into how TAK servers behave, and how to interact with them. This is primarily FreeTakServer (https://github.com/FreeTAKTeam/FreeTakServer) and ATAK/CIVTAK (https://www.civtak.org/). 
 
-Push_cursor_on_target was a bit of inspiration. While quite old, and not functional for server use, it did provide one example of how CoT generation and sending to a client could be done. I chose a different direction for my code, as the CoT generation and server interaction are two separate libraries. 
+Push_cursor_on_target (PCOT)was a bit of inspiration. While quite old, and not functional for server use, it did provide one example of how CoT generation and sending to a client could be done. I chose a different direction for my code, as the CoT generation and server interaction are two separate libraries. The ID and Dimension list definitions were used from their code, as there are only so many ways to capture a standard definitions like CoT uses in Python. The Element Tree method of building XML's that PCOT used also informed my code development. Again, there are only so many ways to efficiently create XMLS's in python.
 
 CoT (Cursor on Target) format, definitions, etc are widely documented on the web and were invalable for understanding how to create a CoT. But blackbox reverse engineering of how the ATAK/CIVTAK client interacted via network traces and instrumentation was required to generate CoT's acceptible by modern servers.  
 
-#### Anything else that seems useful
+
 
 ## License
 This code is licensed under GPL3. Please note this means that any derivative code would need to be also released under the same license. 
