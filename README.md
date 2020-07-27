@@ -1,7 +1,6 @@
 ## Project title
 # takpak
 Python Library and sample code to create CoT's and send them to a TAK server
-A little info about your project and/ or overview that explains **what** the project is about.
 
 ## Motivation
 This library was created to allow the generation and push of CoT's to TAK servers. Goals:
@@ -10,7 +9,9 @@ This library was created to allow the generation and push of CoT's to TAK server
 * Work with current servers. Most of the existing code on the web was significantly out of date, and did not work or caused server issues. 
 
 ## Build status
-The code is in funcitonal state, but continues to evolve/improve
+The code is in funcitonal state, but continues to evolve/improve. Creating CoT's is solid, as is opening/closing/sending cots to a server. Reads are a bit kludgey. They work, but do not differentiate between multiple CoT's, and those which cross the readbuffer size. A better approach may be to return one cot or multiple cots as a list, and save the fragments for the next read. But that requires the class to be stateful. So for now, it's usable, but the calling code will need to check for valid cots and reassemble any fragments. 
+
+The code should work with any TAK server that does not use authorization or certs as it emulates an ATAK/CIVTAK client. But has only been tested against FreeTakServer. 
 
 ## Features
 The takpak library consists of two python3 classes:
@@ -23,17 +24,17 @@ The takpak library consists of two python3 classes:
 * mkcot.py
 
 ## Code Example
-Show what the library does as concisely as possible, developers should be able to figure out **how** your project solves their problem by looking at the code example. Make sure the API you are showing off is obvious, and that your code is short and concise.
+See the two sample programs (sendcot.py and readcots.py)
 
 ## Installation
-Provide step by step series of examples and explanations about how to get a development env running.
+No real install. Just import the classes into your code. Usually best to keep it in a subdirectory. Down the road I may release via PIP.
 
 ## How to use?
-If people like your project they’ll want to learn how they can use it. To do so include step by step guide to use your project.
+To be updated
 
 ## Contribute
 
-Let people know how they can contribute into your project. A [contributing guideline](https://github.com/zulip/zulip-electron/blob/master/CONTRIBUTING.md) will be a big plus.
+If you want to contribute please direct message/email me. I'll need a real email address or github account name, along with a short description of the project you are using it for. 
 
 ## Credits
 While takpak is original code, it would not be possible without the multitude of tools and projects that provided insight into how TAK servers behave, and how to interact with them. This is primarily FreeTakServer (https://github.com/FreeTAKTeam/FreeTakServer) and ATAK/CIVTAK (https://www.civtak.org/). 
@@ -45,6 +46,6 @@ CoT (Cursor on Target) format, definitions, etc are widely documented on the web
 #### Anything else that seems useful
 
 ## License
-A short snippet describing the license (MIT, Apache etc)
+This code is licensed under GPL3. Please note this means that any derivative code would need to be also released under the same license. 
 
-MIT © [Yourname]()
+GPL3 © [Yourname]()
