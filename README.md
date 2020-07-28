@@ -1,4 +1,3 @@
-## Project title
 # takpak
 Python Library and sample code to create CoT's and send them to a TAK server
 
@@ -23,6 +22,9 @@ The takpak library consists of two python3 classes:
     * takread() Attempts read from the server, and returns it. Will loop readattempts times, and the timeout can be set. 
 * mkcot.py
 
+## Prerequisites
+python 3.x. In fact, the libraries and code will give very non-intuitive "almost working" behavior sometimes under older pythons. Main development was on 3.8.
+
 ## Code Example
 See the two sample programs (sendcot.py and readcots.py)
 
@@ -35,34 +37,35 @@ But if you want to have the package linked to the module source, you can use som
 Just remember that if you delete your source dir the module breaks
 
 ## How to use
-See code examples for detail, but TL;DR is:
-from takpak.mkcot import mkcot
-from takpak.takcot import takcot
+See code examples for detail, but TL;DR is:<br/>
+from takpak.mkcot import mkcot<br/>
+from takpak.takcot import takcot<br/>
 
-Then use the various methods:
--# substantiate the class
+Then use the various methods:<br/>
+-# substantiate the class<br/>
 takserver = takcot()
 
--# Open the socket
-testsock = takserver.takopen(IP_addr) # assumes port 8087, you can override
+-# Open the socket<br/>
+testsock = takserver.takopen("172.16.30.30") # assumes port 8087, you can override
 
--# create a CoT (this is a really basic one to connect with)
+-# create a CoT (this is a really basic one to connect with)<br/>
 cot_xml = mkcot.mkcot(cot_type="t", cot_how="h-g-i-g-o")
 
--# then send a cot, the first one FTS interprets as a "Connection"
+-# then send a cot, the first one FTS interprets as a "Connection"<br/>
 takserver.taksend(cot_xml) # again, many params you can override
 
--# Then read the result if interested
+-# Then read the result if interested<br/>
 print(takserver.takread())  # read all the server CoT's, will send last several it has + the connect
 
--# close the connection when done to prevent errors on the server
+-# close the connection when done to prevent errors on the server<br/>
 takserver.takclose()
-
-
 
 ## Contribute
 
 If you want to contribute please direct message/email me. I'll need a real email address or github account name, along with a short description of the project you are using it for. 
+
+## Collaboration Approach
+Please do not commit to the master branch without discussion. Ideally, we probably need to use the "Fork and Pull Request" model. (See https://reflectoring.io/github-fork-and-pull/ if not familiar). This will allow us to use pull requests and review before committing changes to the master. Alternatively, at least create your own dev branch. But this (I think) makes it a bit harder to tell when edits are ready to be integrated. 
 
 ## Credits
 While takpak is original code, it would not be possible without the multitude of tools and projects that provided insight into how TAK servers behave, and how to interact with them. This is primarily FreeTakServer (https://github.com/FreeTAKTeam/FreeTakServer) and ATAK/CIVTAK (https://www.civtak.org/). 
@@ -70,8 +73,6 @@ While takpak is original code, it would not be possible without the multitude of
 Push_cursor_on_target (PCOT)was a bit of inspiration. While quite old, and not functional for server use, it did provide one example of how CoT generation and sending to a client could be done. I chose a different direction for my code, as the CoT generation and server interaction are two separate libraries. The ID and Dimension list definitions were used from their code, as there are only so many ways to capture a standard definitions like CoT uses in Python. The Element Tree method of building XML's that PCOT used also informed my code development. Again, there are only so many ways to efficiently create XMLS's in python.
 
 CoT (Cursor on Target) format, definitions, etc are widely documented on the web and were invalable for understanding how to create a CoT. But blackbox reverse engineering of how the ATAK/CIVTAK client interacted via network traces and instrumentation was required to generate CoT's acceptible by modern servers.  
-
-
 
 ## License
 This code is licensed under GPL3. Please note this means that any derivative code would need to be also released under the same license. 
