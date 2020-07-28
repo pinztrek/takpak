@@ -1,6 +1,10 @@
-# build CoT
+# Make CoT mkcot.py
 #
 # Assemble a proper CoT from inputs
+
+__author__ = 'Alan Barrow <traveler@pinztrek.com>'
+__copyright__ = 'Copyright 2020 Alan Barrow'
+__license__ = 'GPL, Version 3+'
 
 import uuid
 import xml.etree.ElementTree as et
