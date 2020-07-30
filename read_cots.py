@@ -27,7 +27,7 @@ takserver = takcot()
 
 # Now open server
 print("Opening TAK Server")
-testsock = takserver.takopen(TAK_IP)
+testsock = takserver.open(TAK_IP)
 
 #print("open return is:")
 #print(testsock)
@@ -35,23 +35,23 @@ testsock = takserver.takopen(TAK_IP)
 
 print()
 print("send a connect")
-takserver.takflush()  # flush the xmls the server sends
-#print(takserver.takread())  # read all the server CoT's, will send last + the connct
+takserver.flush()  # flush the xmls the server sends
+#print(takserver.read())  # read all the server CoT's, will send last + the connct
 
 connect_xml = mkcot.mkcot(cot_type="t", cot_how="h-g-i-g-o")
 print("Connect XML is:")
 print(connect_xml)
 
 # send the connect string, server does not echo
-takserver.taksend(mkcot.mkcot(cot_type="t", cot_how="h-g-i-g-o")) 
+takserver.send(mkcot.mkcot(cot_type="t", cot_how="h-g-i-g-o")) 
 # send the connect string, server does not echo
 
 #time.sleep(5)
 print("read the Connect response")
-print(takserver.takread())  # read all the server CoT's, will send last + the connct
+print(takserver.read())  # read all the server CoT's, will send last + the connct
 
 #print("Flush the server response")
-#takserver.takflush()  # flush the xmls the server sends
+#takserver.flush()  # flush the xmls the server sends
 #time.sleep(3)
 
 #for i in range(10):
@@ -59,16 +59,16 @@ while True:
     print()
 
     print("wait for a server CoT")
-    print(takserver.takread(readtimeout=10))
+    print(takserver.read(readtimeout=10))
     time.sleep(0.1)
 
 # Always need to close out the connection
 # good practice to include reading anything the server pushed
 # to prevent broken pipe errors on the server
 
-#takserver.takflush()  # flush the xmls the server sends
+#takserver.flush()  # flush the xmls the server sends
 
 print("Closing TAK Server")
-takserver.takclose()
+takserver.close()
 
 

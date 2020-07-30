@@ -25,7 +25,7 @@ class takcot():
     # Create a socket the methods can use
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    def takopen(self, ip_address, port=8087):
+    def open(self, ip_address, port=8087):
         self.logging.debug("Opening: " + ip_address + ":" + str(port))
         #self.logging.debug(self.sock)
         try:
@@ -38,7 +38,7 @@ class takcot():
             exit()
         return self.sock
         
-    def takclose(self):
+    def close(self):
         try:
             #closereturn = self.sock.shutdown(1)
             #time.sleep(0.2)
@@ -48,7 +48,7 @@ class takcot():
             self.logging.debug("Socket Close failed")
         return closereturn
 
-    def taksend(self, cotdata, sleeptime=0.075 ):
+    def send(self, cotdata, sleeptime=0.075 ):
         #self.logging.debug(cotdata)
         sentdata=""
         try:
@@ -70,7 +70,7 @@ class takcot():
         return sentdata
 
     # Get rid of any old messages, really should not be needed with unique UID's
-    def takflush(self):
+    def flush(self):
         self.sock.settimeout(1)
 
         #response = 'start some reading'
@@ -88,7 +88,7 @@ class takcot():
                 # Flushed, now return
                 break
 
-    def takread(self, readattempts=5, readtimeout=1):
+    def read(self, readattempts=5, readtimeout=1):
         self.sock.settimeout(readtimeout)
 
         response = ''

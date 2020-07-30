@@ -30,7 +30,7 @@ takserver = takcot()
 
 # Now open server
 print("Opening TAK Server")
-testsock = takserver.takopen(TAK_IP)
+testsock = takserver.open(TAK_IP)
 
 #print("open return is:")
 #print(testsock)
@@ -39,33 +39,34 @@ testsock = takserver.takopen(TAK_IP)
 #connect_xml=cot_xml
 print()
 print("send a connect")
-takserver.takflush()  # flush the xmls the server sends
-#print(takserver.takread())  # read all the server CoT's, will send last + the connct
+takserver.flush()  # flush the xmls the server sends
+#print(takserver.read())  # read all the server CoT's, will send last + the connct
 
 # send the connect string, server does not echo
-takserver.taksend(mkcot.mkcot(cot_type="t", cot_how="h-g-i-g-o")) 
+takserver.send(mkcot.mkcot(cot_type="t", cot_how="h-g-i-g-o")) 
 
 #print("read the Connect response")
-#print(takserver.takread())  # read all the server CoT's, will send last + the connct
+#print(takserver.read())  # read all the server CoT's, will send last + the connct
 
 print("Flush the server response")
-takserver.takflush()  # flush the xmls the server sends
+takserver.flush()  # flush the xmls the server sends
 time.sleep(1)
 
-for i in range(10):
+#for i in range(10):
+while True:
     print()
-    print("send a cot")
-    takserver.takflush()  # flush the xmls the server sends
-    #takserver.taksend(cot_xml)
-    takserver.taksend(mkcot.mkcot(cot_identity="friend"
-        , cot_stale = 1
-        , cot_dimension="land-unit",cot_typesuffix="E-C-T"
-        , cot_lat=33+i/20, cot_lon=-84+i/20))
+    cot_xml = str(input("Enter a properly formed CoT XML string:"))
+    print("CoT is:")
+    print(cot_xml)
+    # Convert to bytes for the send (mkcot does this for you normally)
+    cot_xml = bytes(cot_xml,"UTF-8")
+    takserver.flush()  # flush the xmls the server sends
+    takserver.send(cot_xml)
     print()
 
     time.sleep(1)
     print("read the response")
-    print(takserver.takread())
+    print(takserver.read())
 
 
 time.sleep(5)
@@ -74,7 +75,7 @@ time.sleep(5)
 # good practice to include reading anything the server pushed
 # to prevent broken pipe errors on the server
 
-#takserver.takflush()  # flush the xmls the server sends
+#takserver.flush()  # flush the xmls the server sends
 
 print("Closing TAK Server")
-takserver.takclose()
+takserver.close()
