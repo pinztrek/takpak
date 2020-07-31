@@ -61,6 +61,9 @@ class mkcot:
         , cot_typesuffix="" #need to make a default
         , cot_id= my_uid, cot_callsign= my_call
         , team_name=__name__ , team_role="Team Member"
+        , tgt_call=False
+        , tgt_uid=False
+        , tgt_msg=False
         ):
     
         # Get the current time and convert to CoT XML
@@ -71,17 +74,21 @@ class mkcot:
         stale=gmtime(time() + (60 * cot_stale))
         stale_xml = strftime(datetime_strfmt,stale)
 
-        unit_id = ID[cot_identity]
-    
-        cot_typestr = cot_type +"-" + unit_id + "-" + DIM[cot_dimension]
-
+        if cot_identity:
+            unit_id = ID[cot_identity]
+            cot_typestr = cot_type +"-" + unit_id 
+            if cot_dimension:
+                cot_typestr = cot_typestr +"-" + DIM[cot_dimension]
+        else:
+            cot_typestr = cot_type # No unit, just go with basic type
+   
         if cot_typesuffix:     
             # append the type suffix to the type string
             cot_typestr = cot_typestr + "-" + cot_typesuffix
 
 
         event_attr = {
-            "version": "1.0",
+            "version": "2.0",
             "uid": cot_id,
             "time": now_xml,
             "start": now_xml,
@@ -132,11 +139,59 @@ class mkcot:
             #"iconsetpath": '34ae1613-9645-4222-a9d2-e5f243dea2865/Military/soldier6.png'
             "iconsetpath": 'f7f71666-8b28-4b57-9fbb-e38e61d33b79/Google/placemark_circle.png'
         }
-        remarks_attr = {
-            "source": "APRS-Inject",
-            "keywords": "APRS,KM4BA"
+        #remarks_attr = {
+        #    "source": "APRS-Inject",
+        #    "keywords": "APRS,KM4BA"
+        #}
+
+        # Geochat Attributes
+        chat_attr = {
+            "parent": "RootContactGroup",
+            "groupOwner": "false",
+            #"chatroom": "PINZ-3",
+            "chatroom": tgt_call,
+            #"id": "ANDROID-357752082829560",
+            "id": tgt_uid,
+            "senderCallsign": cot_callsign
         }
     
+        chatgrp_attr = {
+            #"uid0": "ANDROID-355675081966541",
+            "uid0": my_uid,
+            #"uid1": "ANDROID-357752082829560",
+            "uid1": tgt_uid,
+            #"id": "ANDROID-357752082829560"
+            "id": tgt_uid
+        }
+
+        link_attr = {
+            #"uid": "ANDROID-355675081966541",
+            "uid": my_uid,
+            "type": "a-f-G-U-C",
+            "relation": "p-p"
+        }
+
+        remarks_attr = { # actual text is appended later as a "tail"
+            #"source": "BAO.F.ATAK.ANDROID-355675081966541",
+            #"source": "BAO.F.ATAK." + my_uid,
+            "source": "TAKPAK." + my_uid,
+            #"to": "ANDROID-357752082829560",
+            "to": tgt_uid,
+            "time": now_xml,
+            #"time": "2020-07-30T19:10:10.755Z",
+        }
+
+        serverdestination = {
+            #"destinations": "172.16.10.141:4242:tcp:ANDROID-355675081966541"
+            #"destinations": "172.16.10.141:4242:tcp:" + my_uid
+            # Not clear on who this needs to be... but works coming from the server IP
+            "destinations": "172.16.30.30:4242:tcp:" + my_uid
+        }
+
+        martidest_attr = {
+            "callsign": tgt_call,
+        }
+
         cot = et.Element('event', attrib=event_attr)
         et.SubElement(cot,'point', attrib=point_attr)
         #et.SubElement(cot, 'detail')
@@ -144,14 +199,30 @@ class mkcot:
         #detail = et.SubElement(cot, 'detail', attrib=detail_attr)
         detail = et.SubElement(cot, 'detail')
         # Now add some subelements to detail
-        et.SubElement(detail,'contact', attrib=contact_attr)
-        et.SubElement(detail,'precisionlocation', attrib=precision_attr)
-        if team_name: # Don't include the block if set to "" as override
-            et.SubElement(detail,'__group', attrib=group_attr)
-        et.SubElement(detail,'takv', attrib=platform_attr)
+        if tgt_call:  # target_call means a geochat
+            chat = et.SubElement(detail,'__chat', attrib=chat_attr)
+            et.SubElement(chat,'chatgrp', attrib=chatgrp_attr)
+            et.SubElement(detail,'link', attrib=link_attr)
+            remarks = et.SubElement(detail,'remarks', attrib=remarks_attr)
+            remarks.text= tgt_msg
+            et.SubElement(detail,'__serverdestination', attrib=serverdestination)
+
+            #marti=et.SubElement(detail,'marti', attrib=marti_attr)
+            marti=et.SubElement(detail,'marti')
+            et.SubElement(marti,'dest', attrib=martidest_attr)
+
+        else:
+            et.SubElement(detail,'contact', attrib=contact_attr)
+            et.SubElement(detail,'precisionlocation', attrib=precision_attr)
+            if team_name: # Don't include the block if set to "" as override
+                et.SubElement(detail,'__group', attrib=group_attr)
+            et.SubElement(detail,'takv', attrib=platform_attr)
         #et.SubElement(detail,'color', attrib=color_attr)
         #et.SubElement(detail,'usericon', attrib=icon_attr)
         #et.SubElement(detail,'remarks', attrib=remarks_attr)
+
+        #print("ET dump")
+        #et.dump(cot)
 
         # Prepend the XML header
         cot_xml = b'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + b'\n' + et.tostring(cot)
