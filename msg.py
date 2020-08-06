@@ -52,6 +52,9 @@ users=[
     ,["REES-1","ANDROID-355028092385014","Red"]
     ,["OPERATOR WP4JMV","ANDROID-863134036519299","Blue"]
     ,["DA-B6","ANDROID-358211090479875","Orange"]
+    ,["Aguililla","ANDROID-862892042639093","White"]
+    ,["Hitman","ANDROID-358221090307778","Green"]
+    ,["dB6","ANDROID-2b972fd9e3a7fb94","Red"]
     ]
 
 # function to input a "user" for the message sender & recipient
