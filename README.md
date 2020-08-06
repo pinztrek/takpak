@@ -21,12 +21,25 @@ The takpak library consists of two python3 classes:
     * takflush() Reads any pending data from the server, quietly ignores it
     * takread() Attempts read from the server, and returns it. Will loop readattempts times, and the timeout can be set. 
 * mkcot.py
+    * Builds common CoT's based on params
+        * Position Reports of Users or points
+        * Messages (geochat) to Users whether online or not
+    * Note mkcot is not intended to be a full CoT generator. It is only populated for 
+      common use cases as seen in ATAK
+
 
 ## Prerequisites
 python 3.x. In fact, the libraries and code will give very non-intuitive "almost working" behavior sometimes under older pythons. Main development was on 3.8.
 
 ## Code Example
-See the two sample programs (sendcot.py and readcots.py)
+See the sample programs 
+    * sendcot.py - pushes a CoT to the server. (may need some updates)
+    * circle.py- fly's a user in a circle around a point. Depends on an internal user DB for UID's
+    * readcots.py- Connects to the server, and prints CoT's the server publishes. Currently
+    not breaking them apart yet. 
+    * takmsg.py- Connects to a server, and initiates a message to a user. Depends on a table of UID's,      should be replaced with a real DB in user code of UID's
+
+All of the sample code should have keyboard interupt handlers added, as should some of the library code. But it works for now. 
 
 ## Installation
 The best method is to save the source to something like /opt/takpak and then pip (or pip3) install from there. 

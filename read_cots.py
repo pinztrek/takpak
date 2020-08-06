@@ -1,9 +1,17 @@
 import time
 #from time import sleep,gmtime,strftime
+from sys import version_info
 import os
 import uuid
 #from socket import getfqdn
 import socket 
+
+# Bail if not python 3 or later
+#if sys.version_info.major < 3:
+if version_info.major < 3:
+    print("Must use python 3 or later")
+    exit()
+
 
 #import takcot. Note this only works if you have installed the package
 #   If you have not installed as a package, you may have to tune your imports
@@ -13,11 +21,14 @@ from takpak.takcot import takcot
 
 #logging.basicConfig(level=logging.INFO) # level=10
 
-TAK_IP = '172.16.30.30'
-TAK_PORT = 8087
-
-#TAK_IP = os.getenv('ATAK_IP', '204.48.30.216')
-#TAK_PORT = int(os.getenv('ATAK_PORT', '8087'))
+server = input('Server? local is default, "FTS" uses FTS Public: ')
+if server == "FTS":
+    TAK_IP = os.getenv('TAK_IP', '204.48.30.216')
+    TAK_PORT = int(os.getenv('TAK_PORT', '8087'))
+else:
+    # use the local server for default
+    TAK_IP = '172.16.30.30'
+    TAK_PORT = 8087
 
 #-----------------------------------------------------------------------------------------
 
