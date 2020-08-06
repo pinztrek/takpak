@@ -46,16 +46,17 @@ while user == "":
         print("User " + users[user][0] + " selected")
 
 # select a server, default to local
-
-server = input('Server? local is default, "FTS" uses FTS Public: ')
+server = input('Server? local is default, "FTS" or "DISCORD" uses those public servers: ')
 if server == "FTS":
-    TAK_IP = os.getenv('ATAK_IP', '204.48.30.216')
-    TAK_PORT = int(os.getenv('ATAK_PORT', '8087'))
+    TAK_IP = os.getenv('TAK_IP', '204.48.30.216')
+    TAK_PORT = int(os.getenv('TAK_PORT', '8087'))
+elif server == "DISCORD":
+    TAK_IP = os.getenv('TAK_IP', '128.199.70.11')
+    TAK_PORT = int(os.getenv('TAK_PORT', '48088'))
 else:
     # use the local server for default
     TAK_IP = '172.16.30.30'
     TAK_PORT = 8087
-
 
 #-----------------------------------------------------------------------------------------
 
@@ -65,7 +66,7 @@ takserver = takcot()
 
 # Now open server
 print("Opening TAK Server")
-testsock = takserver.open(TAK_IP)
+testsock = takserver.open(TAK_IP,TAK_PORT)
 
 #print("open return is:")
 #print(testsock)

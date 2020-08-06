@@ -17,10 +17,13 @@ if sys.version_info.major < 3:
     exit()
 
 # select a server, default to local
-server = input('Server? local is default, "FTS" uses FTS Public: ')
+server = input('Server? local is default, "FTS" or "DISCORD" uses those public servers: ')
 if server == "FTS":
     TAK_IP = os.getenv('TAK_IP', '204.48.30.216')
     TAK_PORT = int(os.getenv('TAK_PORT', '8087'))
+elif server == "DISCORD":
+    TAK_IP = os.getenv('TAK_IP', '128.199.70.11')
+    TAK_PORT = int(os.getenv('TAK_PORT', '48088'))
 else:
     # use the local server for default
     TAK_IP = '172.16.30.30'
@@ -55,6 +58,8 @@ users=[
     ,["Aguililla","ANDROID-862892042639093","White"]
     ,["Hitman","ANDROID-358221090307778","Green"]
     ,["dB6","ANDROID-2b972fd9e3a7fb94","Red"]
+    ,["Heltec 1","Heltec 1-6c626de49d52","Red"]
+    ,["Mesh 2","Mesh 2-6c626de49d52","Red"]
     ]
 
 # function to input a "user" for the message sender & recipient
@@ -86,7 +91,7 @@ def get_user(usertype):
 
 # Open the server connection
 takserver = takcot()
-testsock = takserver.open(TAK_IP)
+testsock = takserver.open(TAK_IP,TAK_PORT)
 
 # Connect- now have to connect with a callsign
 takserver.send(mkcot.mkcot(cot_type="t", cot_how="h-g-i-g-o", cot_callsign=my_call))
@@ -122,8 +127,9 @@ while True:
 
     print()
     msg_default = "Test from takpak"
-    message = str(input("Enter the message: " + msg_default + ": ") or msg_default)
-    target_msg = strftime("%Y-%m-%d %H:%M:%SZ ", gmtime()) + message
+    msg_default = strftime("%Y-%m-%d %H:%M:%SZ ", gmtime()) + msg_default
+    target_msg = str(input("Enter the message: " + msg_default + ": ") or msg_default)
+    #target_msg = strftime("%Y-%m-%d %H:%M:%SZ ", gmtime()) + message
 
 
     # Messages have a unique uid- critical
