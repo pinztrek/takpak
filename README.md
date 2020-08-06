@@ -32,12 +32,11 @@ The takpak library consists of two python3 classes:
 python 3.x. In fact, the libraries and code will give very non-intuitive "almost working" behavior sometimes under older pythons. Main development was on 3.8.
 
 ## Code Example
-See the sample programs 
-    * sendcot.py - pushes a CoT to the server. (may need some updates)
-    * circle.py- fly's a user in a circle around a point. Depends on an internal user DB for UID's
-    * readcots.py- Connects to the server, and prints CoT's the server publishes. Currently
-    not breaking them apart yet. 
-    * takmsg.py- Connects to a server, and initiates a message to a user. Depends on a table of UID's,      should be replaced with a real DB in user code of UID's
+See the sample programs: 
+* sendcot.py - pushes a CoT to the server. (may need some updates)
+* circle.py- fly's a user in a circle around a point. Depends on an internal user DB for UID's
+* readcots.py- Connects to the server, and prints CoT's the server publishes. Currently not breaking them apart yet. 
+* takmsg.py- Connects to a server, and initiates a message to a user. Depends on a table of UID's, which would be replaced with a real DB in user code of UID's
 
 All of the sample code should have keyboard interupt handlers added, as should some of the library code. But it works for now. 
 
