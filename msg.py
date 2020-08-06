@@ -46,6 +46,7 @@ my_call = my_call + "-" + my_uid[-4:]
 # to users that are not online. 
 users=[
     [my_call,my_uid,"Cyan"]
+    ,["All Chat Rooms 2","All Chat Rooms","Red"]
     ,["PINZ-2","ANDROID-355675081966541","Dark Green"]
     ,["PINZ-3","ANDROID-357752082829560","Dark Green"]
     ,["KM4BA","ANDROID-355675081966541","Purple"]
