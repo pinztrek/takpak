@@ -257,6 +257,7 @@ while True:
                     group_blk = detail_blk.find("__chat")
                     #print("group_blk.get chatroom")
                     this_recipient = group_blk.get("chatroom")
+                    this_sender = group_blk.get("senderCallsign")
                     #print("Recip: " + this_recipient)
                 except:
                     #print("No chat")
@@ -278,7 +279,7 @@ while True:
                     except:
                         print("No remarks msg")
                         this_recipient = "None"
-                    print("Recipient: " + this_recipient + " Msg: " + this_msg  )
+                    print("Sender: " + this_sender + " Recipient: " + this_recipient + " Msg: " + this_msg  )
 
                 
                 print()
