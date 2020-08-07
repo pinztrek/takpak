@@ -245,6 +245,8 @@ while True:
                 # OK, we have the basics
                 if this_uid.endswith("-ping"):
                     print("Ping: " + this_uid)
+                elif this_uid.startswith("GeoChat."):
+                    print("Geochat: " + this_uid)
                 else:
                     print("user: " + this_call + " uid: " + this_uid + " team: " + this_team)
                     #print(',["' + this_call + '","' + this_uid + '","' + this_team + '"]')
@@ -255,13 +257,13 @@ while True:
                     group_blk = detail_blk.find("__chat")
                     #print("group_blk.get chatroom")
                     this_recipient = group_blk.get("chatroom")
-                    print("Recip: " + this_recipient)
+                    #print("Recip: " + this_recipient)
                 except:
                     #print("No chat")
                     this_recipient = ""
 
                 if this_recipient:
-                    print("Looking for msg")
+                    #print("Looking for msg")
                     #detail_blk = tree.find("detail")
                     try:
                         remarks_blk = detail_blk.find("remarks")
@@ -269,14 +271,14 @@ while True:
                         print("No Remarks Block")
    
                     try: 
-                        this_to = remarks_blk.get("to")
-                        print("this_to: " + this_to)
+                        #this_to = remarks_blk.get("to")
+                        #print("this_to: " + this_to)
                         #this_msg = remarks_blk.tail
-                        this_msg = remarks_blk[0].tail
+                        this_msg = remarks_blk.text
                     except:
                         print("No remarks msg")
                         this_recipient = "None"
-                    print(',["' + this_recipient + '","' + this_msg + '"]')
+                    print("Recipient: " + this_recipient + " Msg: " + this_msg  )
 
                 
                 print()
