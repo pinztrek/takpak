@@ -5,6 +5,7 @@ import os
 import uuid
 #from socket import getfqdn
 import socket 
+import json
 
 import xml.etree.ElementTree as ET
 
@@ -36,6 +37,45 @@ else:
     # use the local server for default
     TAK_IP = '172.16.30.30'
     TAK_PORT = 8087
+
+print()
+
+#open the users list
+userfile = 'users.json'
+try:
+    f = open(userfile, "r+")
+    try:
+        users = json.load(f)
+        print("Initial Users:")
+        print(users)
+    except:
+        print("users json load failed")
+        users = []
+    finally:
+        f.close()
+except:
+    users = []
+    print("Users file open failed, resetting")
+
+print()
+
+#users=[
+    #["All Chat Rooms 2","All Chat Rooms","Red"]
+    #,["PINZ-2","ANDROID-355675081966541","Dark Green"]
+    #,["PINZ-3","ANDROID-357752082829560","Dark Green"]
+    #,["KM4BA","ANDROID-355675081966541","Purple"]
+    #,["corvoTab","ANDROID-R52JB0CDC4E","Yellow"]
+    #,["NOVA","ANDROID-359975090666199","Yellow"]
+    #,["Predator hq","ef6b0e44-54d1-4922-bbbb-44becbfa7779","Yellow"]
+    #,["REES-1","ANDROID-355028092385014","Red"]
+    #,["OPERATOR WP4JMV","ANDROID-863134036519299","Blue"]
+    #,["DA-B6","ANDROID-358211090479875","Orange"]
+    #,["Aguililla","ANDROID-862892042639093","White"]
+    #,["Hitman","ANDROID-358221090307778","Green"]
+    #,["dB6","ANDROID-2b972fd9e3a7fb94","Red"]
+    #,["Heltec 1","Heltec 1-6c626de49d52","Red"]
+    #,["Mesh 2","Mesh 2-6c626de49d52","Red"]
+    #]
 
 #-----------------------------------------------------------------------------------------
 
@@ -72,7 +112,7 @@ takserver.send(mkcot.mkcot(cot_type="t", cot_how="h-g-i-g-o"))
 #takserver.flush()  # flush the xmls the server sends
 #time.sleep(3)
 
-print("start --------------------------------------------------------------------")
+#print("start --------------------------------------------------------------------")
 count = 1
 frag = ""
 #for i in range(10):
@@ -134,6 +174,8 @@ while True:
             # OK, we have a cot it appears
             print(str(count) + " --------------------------------------------------------------------")
 
+            this_call=""
+            this_team=""
             # Now try to parse the XML
             try:
 
@@ -165,9 +207,47 @@ while True:
                 except:
                     #print("No team")
                     this_team = "None"
+               
+                if this_call != "None": 
+                    user_new = True
+                    for user in users:
+                        #print(user)
+                        #print(user[0])
+                        if user[0] == this_call:
+                            user_new = False
+                    
+                    if user_new:
+                        print("New user " + this_call + " ",end="",flush=True)
+                        try:
+                            user = [this_call,this_uid,this_team]
+                            users.append(user)
+                            #print(users)
+                            #users_json = json.dumps(users)
+                            #print(users_json)
+                            try:
+                                f = open(userfile, "w")
+                                try:
+                                    json.dump(users,f)
+                                    f.close()
+                                    #print("New user " + this_call + " written to " + userfile)
+                                    print("written to " + userfile)
+                                except:
+                                    print("json write failed")
+                                finally:
+                                    #print("closing " + userfile)
+                                    f.close()
+                            except:
+                                print("File open failed")
+                        except:
+                            print("Users append failed")
+                        #print("user " + this_call + " added " + str(len(users)))
 
                 # OK, we have the basics
-                print(',["' + this_uid + '","' + this_call + '","' + this_team + '"]')
+                if this_uid.endswith("-ping"):
+                    print("Ping: " + this_uid)
+                else:
+                    print("user: " + this_call + " uid: " + this_uid + " team: " + this_team)
+                    #print(',["' + this_call + '","' + this_uid + '","' + this_team + '"]')
                 
                 try:
                     #print("Looking for recipients")

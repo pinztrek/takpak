@@ -4,6 +4,7 @@ import socket
 import os , sys
 import uuid
 import random
+import json
 
 import sys
 
@@ -44,24 +45,25 @@ my_call = my_call + "-" + my_uid[-4:]
 # This should be replaced with a proper DB based on reading server responses
 # UID and callsign are critical. Team mainly matters if pushing things 
 # to users that are not online. 
-users=[
-    [my_call,my_uid,"Cyan"]
-    ,["All Chat Rooms 2","All Chat Rooms","Red"]
-    ,["PINZ-2","ANDROID-355675081966541","Dark Green"]
-    ,["PINZ-3","ANDROID-357752082829560","Dark Green"]
-    ,["KM4BA","ANDROID-355675081966541","Purple"]
-    ,["corvoTab","ANDROID-R52JB0CDC4E","Yellow"]
-    ,["NOVA","ANDROID-359975090666199","Yellow"]
-    ,["Predator hq","ef6b0e44-54d1-4922-bbbb-44becbfa7779","Yellow"]
-    ,["REES-1","ANDROID-355028092385014","Red"]
-    ,["OPERATOR WP4JMV","ANDROID-863134036519299","Blue"]
-    ,["DA-B6","ANDROID-358211090479875","Orange"]
-    ,["Aguililla","ANDROID-862892042639093","White"]
-    ,["Hitman","ANDROID-358221090307778","Green"]
-    ,["dB6","ANDROID-2b972fd9e3a7fb94","Red"]
-    ,["Heltec 1","Heltec 1-6c626de49d52","Red"]
-    ,["Mesh 2","Mesh 2-6c626de49d52","Red"]
-    ]
+
+#open the users list
+userfile = 'users.json'
+try:
+    f = open(userfile, "r+")
+    try:
+        users = json.load(f)
+        print("Initial Users:")
+        print(users)
+    except:
+        print("users json load failed")
+        users = []
+    finally:
+        f.close()
+except:
+    users = []
+    print("Users file open failed, resetting")
+
+print()
 
 # function to input a "user" for the message sender & recipient
 # usertype only matters for the prompt
