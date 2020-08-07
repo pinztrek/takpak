@@ -63,21 +63,102 @@ takserver.send(mkcot.mkcot(cot_type="t", cot_how="h-g-i-g-o"))
 # send the connect string, server does not echo
 
 #time.sleep(5)
-print("read the Connect response")
-print(takserver.read())  # read all the server CoT's, will send last + the connct
+#print("read the Connect response")
+#print(takserver.read())  # read all the server CoT's, will send last + the connct
 
 #print("Flush the server response")
 #takserver.flush()  # flush the xmls the server sends
 #time.sleep(3)
 
+print("start --------------------------------------------------------------------")
 count = 1
-
+frag = ""
 #for i in range(10):
 while True:
-    print()
+    #print()
 
-    print("wait for a server CoT- count = " +str(count))
-    print(takserver.read(readtimeout=10))
+    #print("wait for a server CoT- count = " +str(count))
+    #print(takserver.read(readtimeout=10))
+
+    # Read a buff
+    cotbuff = takserver.read(readtimeout=10)
+
+    #print("cotbuff length is: " + str(len(cotbuff)))
+    #print("raw cotbuff:")
+    #print(cotbuff)
+
+    if not cotbuff:
+        time.sleep(0.1)
+        print("No Data")
+        continue
+    
+    # OK, we read something, now prepend the frag and clean it up
+    cotbuff = bytes(frag,'utf-8') + cotbuff
+
+    #print("cotbuff is:")
+    #print(cotbuff)
+    #print(type(cotbuff))
+    try:
+        cotbuff = cotbuff.decode('utf-8') # convert to a string
+    except:
+        print("cotbuff decode failed")
+    #print("decoded cotbuff is:")
+    #print(cotbuff)
+    #print(type(cotbuff))
+
+    cotbuff=cotbuff.replace("\n","")
+
+    #print("cleaned cotbuff is:")
+    #print(cotbuff)
+    #print(type(cotbuff))
+    #print()
+
+    cots="nothing"
+    count = 1
+
+    while len(cots)>1:
+        #print("cots length is: " + str(len(cots)))
+        try:
+            # split the buff using the closing event tag
+            cots=cotbuff.split("/event>",1)
+
+            # The first part should be an xml hopefully
+            cot_xml=cots[0] + "/event>"
+
+            # The 2nd part is a frag if at all
+            frag=cots[1]
+            #print("Frag XML is: |" + frag + "|")
+
+            # if the frag is "", then move along
+            if not frag:
+                print(str(count) + " --------------------------------------------------------------------")
+                #print("CoT XML is: |" + cot_xml + "|")
+                print("CoT XML is: " + cot_xml )
+                #print("Single CoT left in buff " + str(len(frag)))
+                break # end of the cotbuff
+
+            # OK, we have a cot it appears
+            print(str(count) + " --------------------------------------------------------------------")
+            #print("CoT XML is: |" + cot_xml + "|")
+            print("CoT XML is: " + cot_xml )
+
+            cotbuff=frag
+            count += 1
+            
+        except:
+            #print("Split failed")
+            cot_xml="" # no complete cot
+            frag=cotbuff
+            #print("remaining buff:")
+            #print(cotbuff)
+            #print("frag xml is:")
+            #print(frag)
+            break
+
+        #print(str(count) + " --------------------------------------------------------------------")
+
+    
+    
     time.sleep(0.1)
     count += 1
     if count > 5:
