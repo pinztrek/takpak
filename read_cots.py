@@ -6,6 +6,8 @@ import uuid
 #from socket import getfqdn
 import socket 
 
+import xml.etree.ElementTree as ET
+
 # Bail if not python 3 or later
 #if sys.version_info.major < 3:
 if version_info.major < 3:
@@ -129,18 +131,98 @@ while True:
             frag=cots[1]
             #print("Frag XML is: |" + frag + "|")
 
-            # if the frag is "", then move along
-            if not frag:
-                print(str(count) + " --------------------------------------------------------------------")
-                #print("CoT XML is: |" + cot_xml + "|")
-                print("CoT XML is: " + cot_xml )
-                #print("Single CoT left in buff " + str(len(frag)))
-                break # end of the cotbuff
-
             # OK, we have a cot it appears
             print(str(count) + " --------------------------------------------------------------------")
+
+            # Now try to parse the XML
+            try:
+
+                tree = ET.fromstring(cot_xml)
+                #print("ET dump")
+                #ET.dump(tree)
+                #print(tree.items())
+                #print(tree.keys())
+                #print("tree.get uid")
+                #print(tree.get("uid"))
+    
+                # Get the UID
+                this_uid = tree.get("uid")
+
+                try:
+                    detail_blk = tree.find("detail")
+                    contact_blk = detail_blk.find("contact")
+                    #print("contact.get callsign")
+                    this_call = contact_blk.get("callsign")
+                except:
+                    #print("No callsign")
+                    this_call = "None"
+                
+                try:
+                    #detail_blk = tree.find("detail")
+                    group_blk = detail_blk.find("__group")
+                    #print("contact.get callsign")
+                    this_team = group_blk.get("name")
+                except:
+                    #print("No team")
+                    this_team = "None"
+
+                # OK, we have the basics
+                print(',["' + this_uid + '","' + this_call + '","' + this_team + '"]')
+                
+                try:
+                    #print("Looking for recipients")
+                    #detail_blk = tree.find("detail")
+                    group_blk = detail_blk.find("__chat")
+                    #print("group_blk.get chatroom")
+                    this_recipient = group_blk.get("chatroom")
+                    print("Recip: " + this_recipient)
+                except:
+                    #print("No chat")
+                    this_recipient = ""
+
+                if this_recipient:
+                    print("Looking for msg")
+                    #detail_blk = tree.find("detail")
+                    try:
+                        remarks_blk = detail_blk.find("remarks")
+                    except:
+                        print("No Remarks Block")
+   
+                    try: 
+                        this_to = remarks_blk.get("to")
+                        print("this_to: " + this_to)
+                        #this_msg = remarks_blk.tail
+                        this_msg = remarks_blk[0].tail
+                    except:
+                        print("No remarks msg")
+                        this_recipient = "None"
+                    print(',["' + this_recipient + '","' + this_msg + '"]')
+
+                
+                print()
+
+                #root=tree.getroot()
+                #print("Root: " + str(root))
+                #print(root.tag)
+                #for child in root:
+                #    print(child.tag, child.attrib)
+                #detail=parsed.detail
+                #print("detail:")
+                #print(detail)
+                #lat=parsed.point.lat
+                #print("lat:")
+                #print(lat)
+
+            except:
+                print("parse failed")
+                pass
+
             #print("CoT XML is: |" + cot_xml + "|")
             print("CoT XML is: " + cot_xml )
+
+            # if the frag is "", then move along
+            if not frag:
+                break # end of the cotbuff
 
             cotbuff=frag
             count += 1
