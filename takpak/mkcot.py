@@ -61,6 +61,7 @@ class mkcot:
         , cot_typesuffix="" #need to make a default
         , cot_id= my_uid # used to id a single CoT, could be sender UID, or event
         , cot_callsign= my_call
+        , cot_ping= False
         , team_name=__name__ , team_role="Team Member"
         , sender_uid=""
         , tgt_call=False
@@ -75,6 +76,10 @@ class mkcot:
         # Add the stale time to the current time and convert to CoT XML
         stale=gmtime(time() + (60 * cot_stale))
         stale_xml = strftime(datetime_strfmt,stale)
+
+        # If cot is a ping append "-ping" to UID
+        if cot_ping:
+            cot_id = cot_id + "-ping"
 
         if cot_identity:
             unit_id = ID[cot_identity]
@@ -107,6 +112,7 @@ class mkcot:
             "le": str(cot_le)
         }
 
+        # now the sub-elements for the detail block
         precision_attr = {
             "altsrc": "GPS",
             "geopointsrc": "GPS",
@@ -207,8 +213,9 @@ class mkcot:
             marti=et.SubElement(detail,'marti')
             et.SubElement(marti,'dest', attrib=martidest_attr)
 
-        else:
-            # Add the contact block, always needed
+
+        if not cot_ping:
+            # Add the contact block, needed except for pings
             et.SubElement(detail,'contact', attrib=contact_attr)
 
             et.SubElement(detail,'precisionlocation', attrib=precision_attr)

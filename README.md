@@ -8,22 +8,29 @@ This library was created to allow the generation and push of CoT's to TAK server
 * Work with current servers. Most of the existing code on the web was significantly out of date, and did not work or caused server issues. 
 
 ## Build status
-The code is in funcitonal state, but continues to evolve/improve. Creating CoT's is solid, as is opening/closing/sending cots to a server. Reads are a bit kludgey. They work, but do not differentiate between multiple CoT's, and those which cross the readbuffer size. A better approach may be to return one cot or multiple cots as a list, and save the fragments for the next read. But that requires the class to be stateful. So for now, it's usable, but the calling code will need to check for valid cots and reassemble any fragments. 
+The code is in funcitonal state, but continues to evolve/improve. Creating CoT's is solid, as is opening/closing/sending cots to a server. 
 
-The code should work with any TAK server that does not use authorization or certs as it emulates an ATAK/CIVTAK client. But has only been tested against FreeTakServer. 
+Reads are now functional, with the capability to return a single CoT and any frag via the readcot method. 
+
+The read_cots.py demo code is a useful TAK server CoT sniffer now. It also has CoT parsing to recognize common CoT's and display their key data. This would be ideal to add as a mkcot method. 
+
+The code should work with any TAK server that does not use authorization or certs as it emulates an ATAK/CIVTAK client. It has been confirmed to work with FTS and the original TAK Server.  
 
 ## Features
 The takpak library consists of two python3 classes:
 * takcot.py- which interacts with the TAK server
-    * takopen(ip_address, [port=ur_port_number]) Opens the socket to the server.
-    * takclose() Closes out the session (Important for proper server interaction!)
-    * taksend(cotdata) Sends a cot to the currently open server
-    * takflush() Reads any pending data from the server, quietly ignores it
-    * takread() Attempts read from the server, and returns it. Will loop readattempts times, and the timeout can be set. 
+    * open(ip_address, [port=ur_port_number]) Opens the socket to the server.
+    * close() Closes out the session (Important for proper server interaction!)
+    * send(cotdata) Sends a cot to the currently open server
+    * flush() Reads any pending data from the server, quietly ignores it
+    * read() Attempts read from the server, and returns it. Will loop readattempts times, and the timeout can be set. Note it can return multiple CoT's and potential frags. 
+    * readcot() Attempts to read and return a single cot, along with any fragments of the next CoT(s). 
+
 * mkcot.py
-    * Builds common CoT's based on params
+    * mkcot() Builds common CoT's based on params
         * Position Reports of Users or points
         * Messages (geochat) to Users whether online or not
+        * Pings (set Ping=True)
     * Note mkcot is not intended to be a full CoT generator. It is only populated for 
       common use cases as seen in ATAK
 
@@ -35,8 +42,8 @@ python 3.x. In fact, the libraries and code will give very non-intuitive "almost
 See the sample programs: 
 * sendcot.py - pushes a CoT to the server. (may need some updates)
 * circle.py- fly's a user in a circle around a point. Depends on an internal user DB for UID's
-* readcots.py- Connects to the server, and prints CoT's the server publishes. Currently not breaking them apart yet. 
-* takmsg.py- Connects to a server, and initiates a message to a user. Depends on a table of UID's, which would be replaced with a real DB in user code of UID's
+* read_cots.py- Connects to the server, and prints CoT's the server publishes. Currently not breaking them apart yet. This is a TAK Server CoT sniffer. Also has examples of parsing the XML. It will save a table of users/UID's which can be used by programs like msg.py to send messages. 
+* takmsg.py- Connects to a server, and initiates a message to a user. Depends uses a table of users (users.json) to send messages. 
 
 All of the sample code should have keyboard interupt handlers added, as should some of the library code. But it works for now. 
 
@@ -54,23 +61,26 @@ from takpak.mkcot import mkcot<br/>
 from takpak.takcot import takcot<br/>
 
 Then use the various methods:<br/>
--# substantiate the class<br/>
+# substantiate the class<br/>
 takserver = takcot()
 
--# Open the socket<br/>
-testsock = takserver.takopen("172.16.30.30") # assumes port 8087, you can override
+# Open the socket<br/>
+testsock = takserver.open("172.16.30.30") # assumes port 8087, you can override
 
--# create a CoT (this is a really basic one to connect with)<br/>
+# create a CoT (this is a really basic one to connect with)<br/>
 cot_xml = mkcot.mkcot(cot_type="t", cot_how="h-g-i-g-o")
 
--# then send a cot, the first one FTS interprets as a "Connection"<br/>
-takserver.taksend(cot_xml) # again, many params you can override
+# then send a cot, the first one FTS interprets as a "Connection"<br/>
+takserver.send(cot_xml) # again, many params you can override
 
--# Then read the result if interested<br/>
-print(takserver.takread())  # read all the server CoT's, will send last several it has + the connect
+# Then read a CoT<br/>
+print(takserver.readcot())  # reads a single CoT returns a CoT and potentially a frag. Returns a null string pair if there was no data by readtimeout. 
 
--# close the connection when done to prevent errors on the server<br/>
-takserver.takclose()
+# Then read the result if interested<br/>
+print(takserver.read())  # read all the server CoT's, will send last several it has + the connect
+
+# close the connection when done to prevent errors on the server<br/>
+takserver.close()
 
 ## Contribute
 
