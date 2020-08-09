@@ -43,6 +43,7 @@ class takcot():
             #closereturn = self.sock.shutdown(1)
             #time.sleep(0.2)
             closereturn = self.sock.close()
+            self.logging.debug("takserver connection closed")
         except:
             closereturn = 0
             self.logging.debug("Socket Close failed")
@@ -99,6 +100,10 @@ class takcot():
                 #print("readit response is:")
                 #print(response)
                 return response
+
+            except KeyboardInterrupt:
+                self.logging.debug("Kbd Interrupt during read")
+                raise
 
             except:
                 #print("readit read empty")

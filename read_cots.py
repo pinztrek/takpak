@@ -123,7 +123,16 @@ while True:
     #print(takserver.read(readtimeout=10))
 
     # Read a buff
-    cotbuff = takserver.read(readtimeout=10)
+    try:
+        cotbuff = takserver.read(readtimeout=10)
+    except KeyboardInterrupt:
+        print()
+        print('Keyboard Interrupt- shutting down')
+        takserver.close()
+        print()
+        raise
+    except:
+        continue        
 
     #print("cotbuff length is: " + str(len(cotbuff)))
     #print("raw cotbuff:")
