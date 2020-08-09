@@ -61,25 +61,25 @@ from takpak.mkcot import mkcot<br/>
 from takpak.takcot import takcot<br/>
 
 Then use the various methods:<br/>
-# substantiate the class<br/>
+### substantiate the class<br/>
 takserver = takcot()
 
-# Open the socket<br/>
+### Open the socket<br/>
 testsock = takserver.open("172.16.30.30") # assumes port 8087, you can override
 
-# create a CoT (this is a really basic one to connect with)<br/>
+### create a CoT (this is a really basic one to connect with)<br/>
 cot_xml = mkcot.mkcot(cot_type="t", cot_how="h-g-i-g-o")
 
-# then send a cot, the first one FTS interprets as a "Connection"<br/>
+### then send a cot, the first one FTS interprets as a "Connection"<br/>
 takserver.send(cot_xml) # again, many params you can override
 
-# Then read a CoT<br/>
+### Then read a CoT<br/>
 print(takserver.readcot())  # reads a single CoT returns a CoT and potentially a frag. Returns a null string pair if there was no data by readtimeout. 
 
-# Then read the result if interested<br/>
+### Then read the result if interested<br/>
 print(takserver.read())  # read all the server CoT's, will send last several it has + the connect
 
-# close the connection when done to prevent errors on the server<br/>
+### close the connection when done to prevent errors on the server<br/>
 takserver.close()
 
 ## Contribute
