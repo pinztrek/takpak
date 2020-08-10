@@ -134,7 +134,7 @@ class mkcot:
             
 
         platform_attr = {
-            "OS": "29", # List as Android for now, what to use?
+            "os": "29", # List as Android for now, what to use?
             "platform": __name__,
             "version": version
         }
