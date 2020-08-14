@@ -113,31 +113,46 @@ class mkcot:
         }
 
         # now the sub-elements for the detail block
-        precision_attr = {
-            "altsrc": "GPS",
-            "geopointsrc": "GPS",
-        }
-
-        if cot_callsign:
-            contact_attr = {
-                "endpoint": "*:-1:stcp",
-                "callsign": cot_callsign
+        if not tgt_call:
+            precision_attr = {
+                "altsrc": "GPS",
+                "geopointsrc": "GPS",
             }
         else:
-            contact_attr = { } # still have to include the block
-            team_name = "" # No need for team if no callsign
+            precision_attr = None
 
-        group_attr = {  # Ignored later if callsign & team name not defined
-            "role": team_role,
-            "name": team_name
-        }
+        # if not a geochat we always have to include the contact block
+        if not tgt_call:
+            if cot_callsign:
+                contact_attr = {
+                    "endpoint": "*:-1:stcp",
+                    "callsign": cot_callsign
+                }
+            else:
+                contact_attr = { } # still have to include the block
+                team_name = "" # No need for team if no callsign
+        else:
+            contact_attr = None
+        
+
+        if team_name and not tgt_call:
+            # only use if the team is defined and it's not a geochat
+            group_attr = {  
+                "role": team_role,
+                "name": team_name
+            }
+        else:
+            group_attr = None
             
 
-        platform_attr = {
-            "os": "29", # List as Android for now, what to use?
-            "platform": __name__,
-            "version": version
-        }
+        if not tgt_call:
+            platform_attr = {
+                "os": "29", # List as Android for now, what to use?
+                "platform": __name__,
+                "version": version
+            }
+        else:
+            platform_attr = None
 
         color_attr = {
             "argb": '-8454017'
@@ -216,15 +231,18 @@ class mkcot:
 
         if not cot_ping:
             # Add the contact block, needed except for pings
-            et.SubElement(detail,'contact', attrib=contact_attr)
+            if contact_attr:
+                et.SubElement(detail,'contact', attrib=contact_attr)
 
-            et.SubElement(detail,'precisionlocation', attrib=precision_attr)
+            if precision_attr:
+                et.SubElement(detail,'precisionlocation', attrib=precision_attr)
 
-            if team_name: # Don't include the block if set to "" as override
+            if group_attr: # Don't include the block if set to "" as override
                 et.SubElement(detail,'__group', attrib=group_attr)
 
             # takv/platform stuff needed for PLI's
-            et.SubElement(detail,'takv', attrib=platform_attr)
+            if platform_attr:
+                et.SubElement(detail,'takv', attrib=platform_attr)
 
             # Optional icon/color
             #et.SubElement(detail,'usericon', attrib=icon_attr)

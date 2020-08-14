@@ -1,6 +1,6 @@
 import time
 #from time import sleep,gmtime,strftime
-import os
+import os, sys
 import uuid
 #from socket import getfqdn
 import socket 
@@ -12,6 +12,11 @@ import math
 
 from takpak.takcot import takcot
 from takpak.mkcot import mkcot
+
+# Bail if not python 3 or later
+if sys.version_info.major < 3:
+    print("Must use python 3 or later")
+    exit()
 
 #logging.basicConfig(level=logging.INFO) # level=10
 
@@ -47,6 +52,7 @@ while user == "":
 
 # select a server, default to local
 server = input('Server? local is default, "FTS" or "DISCORD" uses those public servers: ')
+#logger.debug("Server is: " + server)
 if server == "FTS":
     TAK_IP = os.getenv('TAK_IP', '204.48.30.216')
     TAK_PORT = int(os.getenv('TAK_PORT', '8087'))

@@ -33,7 +33,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Select a logging level
-#logger.setLevel(logging.INFO)
+logger.setLevel(logging.INFO)
 logger.setLevel(logging.DEBUG)
 
 # select a server, default to local
@@ -83,14 +83,25 @@ except:
 
 
 # substantiate the class
-takserver = takcot()
+try:
+    takserver = takcot(logger=logger)
+except:
+    logger.error("takcot class failed")
+    exit()
 
 # Now open server
 logger.debug("Opening TAK Server " + server + "----------------------------------------------------")
-testsock = takserver.open(TAK_IP,TAK_PORT)
+try:
+    testsock = takserver.open(TAK_IP,TAK_PORT)
+except:
+    logger.error("takserver open failed")
+    exit()
 
 logger.debug("send a takserver connect")
-takserver.flush()  # flush the xmls the server sends (should not be any)
+try:
+    takserver.flush()  # flush the xmls the server sends (should not be any)
+except:
+    logger.error("takserver flush failed")
 
 connect_xml = mkcot.mkcot(cot_type="t", cot_how="h-g-i-g-o")
 
@@ -101,11 +112,14 @@ xml_pretty_str = my_xml.toprettyxml()
 logger.debug("Connect XML is: " + xml_pretty_str)
 
 # send the connect string, server does not echo
-takserver.send(mkcot.mkcot(cot_type="t", cot_how="h-g-i-g-o")) 
-# send the connect string, server does not echo
+try:
+    takserver.send(mkcot.mkcot(cot_type="t", cot_how="h-g-i-g-o")) 
+except:
+    logger.error("takserver connect send failed")
+    exit()
 
 
-#print("start --------------------------------------------------------------------")
+#print("Main read loop --------------------------------------------------------------------")
 count = 1
 frag = ""
 while True:

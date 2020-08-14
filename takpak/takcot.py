@@ -2,6 +2,15 @@
 __author__ = 'Alan Barrow <traveler@pinztrek.com>'
 __copyright__ = 'Copyright 2020 Alan Barrow'
 __license__ = 'GPL, Version 3+'
+import os
+#from time import sleep,gmtime,strftime
+import time
+
+import logging
+import socket
+
+
+
 class takcot():
     """
     Connects, Sends and receives properly formed CoT's to TAK servers
@@ -9,33 +18,32 @@ class takcot():
     """
 
 
-    import os
-    #from time import sleep,gmtime,strftime
-    import time
 
-    import logging
-    import socket
+    def __init__(self, logger=None):
+        # use existing logger
+        self.logger = logger or logging.getLogger(__name__)
 
-    # Setup Logging
-    LOGGERFORMAT = '%(asctime)s %(message)s'
-    logging.basicConfig(level=logging.DEBUG
-        , format=LOGGERFORMAT
-        , datefmt='%m/%d/%Y %I:%M:%S') 
-    
-    # Create a socket the methods can use
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.logger.debug(__name__ + " self.logger logging started")
 
+        self.sock = None
+        
     def open(self, ip_address, port=8087):
-        self.logging.debug("Opening: " + ip_address + ":" + str(port))
-        #self.logging.debug(self.sock)
+        self.logger.debug(__name__ + " Opening: " + ip_address + ":" + str(port))
+        try:
+            self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.logger.debug(__name__ + " socket created")
+        except:
+            self.logger.error(__name__ + " socket create failed")
+            exit()
+        
+        self.logger.debug(__name__ + " Opening Socket")
         try:
             conn = self.sock.connect((ip_address, port))
-            #self.logging.debug("Connect Return is:")
-            #self.logging.debug(conn)
+            #self.logger.debug("Connect Return is:")
+            #self.logger.debug(conn)
         except:
-            self.logging.warning("Cannot connect to " + str(ip_address) + ":" + str(port))
-            self.sock = 0
-            exit()
+            self.logger.error(__name__ + " Cannot connect to " + str(ip_address) + ":" + str(port))
+            self.sock = None
         return self.sock
         
     def close(self):
@@ -43,28 +51,28 @@ class takcot():
             #closereturn = self.sock.shutdown(1)
             #time.sleep(0.2)
             closereturn = self.sock.close()
-            self.logging.debug("takserver connection closed")
+            self.logger.debug("takserver connection closed")
         except:
             closereturn = 0
-            self.logging.debug("Socket Close failed")
+            self.logger.warning(__name__ + " Socket Close failed")
         return closereturn
 
     def send(self, cotdata, sleeptime=.075 ):
-        #self.logging.debug(cotdata)
+        self.logger.debug(cotdata)
         sentdata=""
         try:
             sentdata = self.sock.send(cotdata)
-            #self.logging.debug("sent")
+            #self.logger.debug("sent")
         except:
-            self.logging.warning("push_tcp: Send data failed")
+            self.logger.warning("push_tcp: Send data failed")
             return 0
         # Now read what was sent
         #try:
         #    self.sock.settimeout(1)
         #    rcvdata = self.sock.recv(2048)
-        #    self.logging.debug("pushTCP Rcv Data:" + str(rcvdata))
+        #    self.logger.debug("pushTCP Rcv Data:" + str(rcvdata))
         #except:
-        #    self.logging.warning("push_tcp: Rcv data failed")
+        #    self.logger.warning("push_tcp: Rcv data failed")
         #    return 0
         # Set a minimum delay so the server does not get overrun    
         #self.time.sleep(self.sleeptime)  
@@ -88,6 +96,7 @@ class takcot():
                 #print("flushit read empty")
                 # Flushed, now return
                 break
+        return 0 
 
     def read(self, readattempts=5, readtimeout=1):
         self.sock.settimeout(readtimeout)
@@ -102,7 +111,7 @@ class takcot():
                 return response
 
             except KeyboardInterrupt:
-                self.logging.debug("Kbd Interrupt during read")
+                self.logger.debug("Kbd Interrupt during read")
                 raise
 
             except:
@@ -179,7 +188,8 @@ class takcot():
             else:
                 # Must have had an incomplete cot fragment
                 # Ignore the invalid CoT
-                print("Not a valid CoT")
+                self.logger.warning(__name__ + " Not a valid CoT")
+                self.logger.warning(cot_xml)
                 return "", frag
 
         else:
