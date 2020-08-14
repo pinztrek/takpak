@@ -104,6 +104,7 @@ except:
     logger.error("takserver flush failed")
 
 connect_xml = mkcot.mkcot(cot_type="t", cot_how="h-g-i-g-o")
+#connect_xml = mkcot.mkcot(cot_type="t", cot_how="h-g-i-g-o",cot_platform="linux",cot_os="29")
 
 my_xml = connect_xml.decode('utf-8')
 my_xml = parseString(str(my_xml.replace("\n","")))

@@ -13,7 +13,7 @@ import logging
 #import time
 from time import sleep,time,gmtime,strftime
 
-version = "1.0.0"
+version = "1.1.0"
 
 
 ID = {
@@ -62,6 +62,11 @@ class mkcot:
         , cot_id= my_uid # used to id a single CoT, could be sender UID, or event
         , cot_callsign= my_call
         , cot_ping= False
+        , cot_os="1"   # Does not seem to matter, but is required for some CoT's
+        , cot_platform=__name__  # Same as OS, sometimes required
+        , cot_version=version
+        , iconpath=""
+        , color=""
         , team_name=__name__ , team_role="Team Member"
         , sender_uid=""
         , tgt_call=False
@@ -147,22 +152,29 @@ class mkcot:
 
         if not tgt_call:
             platform_attr = {
-                "os": "29", # List as Android for now, what to use?
-                "platform": __name__,
-                "version": version
+                "os": cot_os, 
+                "platform": cot_platform, 
+                "version": cot_version
             }
         else:
             platform_attr = None
 
-        color_attr = {
-            "argb": '-8454017'
-        }
 
-        icon_attr = {
-            #"iconsetpath": '34ae1613-9645-4222-a9d2-e5f243dea2865/Military/soldier6.png'
-            #"iconsetpath": '34ae1613-9645-4222-a9d2-e5f243dea2865/Military/soldier6.png'
-            "iconsetpath": 'f7f71666-8b28-4b57-9fbb-e38e61d33b79/Google/placemark_circle.png'
-        }
+        if iconpath:
+            icon_attr = {
+                #"iconsetpath": '34ae1613-9645-4222-a9d2-e5f243dea2865/Military/soldier6.png'
+                #"iconsetpath": '34ae1613-9645-4222-a9d2-e5f243dea2865/Military/soldier6.png'
+                #"iconsetpath": 'f7f71666-8b28-4b57-9fbb-e38e61d33b79/Google/placemark_circle.png'
+                "iconsetpath": iconpath
+            }
+        else:
+            icon_attr = None
+
+        if color:
+            color_attr = { "argb": '-8454017' }
+        else:
+            color_attr = None
+
 
         # Geochat Attributes -----------------------------------------------
         chat_attr = {
@@ -245,8 +257,10 @@ class mkcot:
                 et.SubElement(detail,'takv', attrib=platform_attr)
 
             # Optional icon/color
-            #et.SubElement(detail,'usericon', attrib=icon_attr)
-            #et.SubElement(detail,'color', attrib=color_attr)
+            if icon_attr:
+                et.SubElement(detail,'usericon', attrib=icon_attr)
+            if color_attr:
+                et.SubElement(detail,'color', attrib=color_attr)
 
 
         # Prepend the XML header

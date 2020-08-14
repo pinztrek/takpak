@@ -181,7 +181,9 @@ class takcot():
 
             #print("function frag: " + frag)
 
-            if cot_xml.startswith("<?xml"):
+            # FTS is not always sending the XML block with FTS version 1.0
+            # so accept one beginning with the event block as valid
+            if cot_xml.startswith("<?xml") or cot_xml.startswith("<event"):
                 #print("Looks valid")
                 #return cot_xml, frag
                 return cot_xml, cots[1]

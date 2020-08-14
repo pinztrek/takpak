@@ -109,6 +109,8 @@ while True:
         , cot_stale = 1
         , cot_dimension="land-unit",cot_typesuffix="E-C-T"
         , cot_callsign=users[user][0] # spoof an active callsign
+        #, cot_callsign=""
+        #, iconpath='f7f71666-8b28-4b57-9fbb-e38e61d33b79/Google/placemark_circle.png'
         , cot_id= users[user][1] # spoof an active uid
         , team_name = users[user][2] # spoof an active team
         , cot_lat=33.9 + delta_lat, cot_lon=-84.6 + delta_lon))
