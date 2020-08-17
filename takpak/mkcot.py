@@ -62,6 +62,7 @@ class mkcot:
         , cot_id= my_uid # used to id a single CoT, could be sender UID, or event
         , cot_callsign= my_call
         , cot_ping= False
+        , cot_point= False
         , cot_os="1"   # Does not seem to matter, but is required for some CoT's
         , cot_platform=__name__  # Same as OS, sometimes required
         , cot_version=version
@@ -127,7 +128,7 @@ class mkcot:
             precision_attr = None
 
         # if not a geochat we always have to include the contact block
-        if not tgt_call:
+        if not tgt_call and not cot_point:
             if cot_callsign:
                 contact_attr = {
                     "endpoint": "*:-1:stcp",

@@ -51,7 +51,7 @@ class takcot():
             #closereturn = self.sock.shutdown(1)
             #time.sleep(0.2)
             closereturn = self.sock.close()
-            self.logger.debug("takserver connection closed")
+            self.logger.debug(__name__ + "takserver connection closed")
         except:
             closereturn = 0
             self.logger.warning(__name__ + " Socket Close failed")
@@ -79,8 +79,8 @@ class takcot():
         return sentdata
 
     # Get rid of any old messages, really should not be needed with unique UID's
-    def flush(self):
-        self.sock.settimeout(1)
+    def flush(self, readtimeout=0.5):
+        self.sock.settimeout(readtimeout)
 
         #response = 'start some reading'
         #Flush any pending server responses
@@ -98,7 +98,7 @@ class takcot():
                 break
         return 0 
 
-    def read(self, readattempts=5, readtimeout=1):
+    def read(self, readattempts=5, readtimeout=0.5):
         self.sock.settimeout(readtimeout)
 
         response = ''
