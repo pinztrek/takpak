@@ -9,7 +9,22 @@ import time
 import logging
 import socket
 
+class Error(Exception):
+    """Base class for exceptions in this module."""
+    pass
 
+class SocketError(Error):
+
+    """Exception raised for errors in the input.
+
+    Attributes:
+        expression -- input expression in which the error occurred
+        message -- explanation of the error
+    """
+
+    def __init__(self, expression, message):
+        self.expression = expression
+        self.message = message
 
 class takcot():
     """
@@ -59,13 +74,30 @@ class takcot():
 
     def send(self, cotdata, sleeptime=.075 ):
         self.logger.debug(cotdata)
+        try:
+            self.logger.debug(__name__ + " Socket fileno: " + str(self.sock.fileno()))
+            if self.sock.fileno() == -1:
+                self.logger.error(__name__ + " Socket Closed")
+                raise SocketError(__name__ + "Socket Closed")
+        except:
+            self.logger.error(__name__ +  " Could not get socket status")
+            raise SocketError(__name__ + "could not get socket status")
         sentdata=""
         try:
+            self.sock.settimeout(0.5) # 0 is non-blocking
             sentdata = self.sock.send(cotdata)
+            if sentdata != len(cotdata):
+                self.logger.error(__name__ +  " Socket Send mismatch " + str(sentdata) + " " +str(len(cotdata)))
+                raise SocketError(__name__ + " Socket Send mismatch " + str(sentdata) + " " +str(len(cotdata)))
             #self.logger.debug("sent")
+
+        except socket.timeout:
+            self.logger.error(__name__ +  " Socket Timeout")
+            raise SocketError(__name__ + "Socket Timeout")
+            
         except:
-            self.logger.warning("push_tcp: Send data failed")
-            return 0
+            self.logger.warning(__name__ + " Send data failed")
+            raise SocketError(__name__ + "Send Failed")
         # Now read what was sent
         #try:
         #    self.sock.settimeout(1)
