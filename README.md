@@ -2,13 +2,13 @@
 Python Library and sample code to create useful CoT's and interact with TAK servers
 
 ## Motivation
-This library was created to allow the generation and push of CoT's to TAK servers. Goals:
+This library was created to allow the generation and send/receive of CoT's to TAK servers. Goals:
 * Do so in a way that does not break or put unusual loads on the servers. (ATAK client interaction with the server was the example followed)
 * Allow the libraries to be used by themselves (inject a raw CoT, or build a CoT, but not inject)
 * Work with current servers. Most of the existing code on the web was significantly out of date, and did not work or caused server issues. 
 
 ## Build status
-The code is in funcitonal state, but continues to evolve/improve. Creating CoT's is solid, as is opening/closing/sending cots to a server. 
+The code is in functional state, but continues to evolve/improve. Creating CoT's is solid, as is opening/closing/sending cots to a server. 
 
 Reads are now functional, with the capability to return a single CoT and any frag via the readcot method. 
 
