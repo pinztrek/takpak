@@ -1,5 +1,5 @@
 # takpak
-Python Library and sample code to create CoT's and send them to a TAK server
+Python Library and sample code to create useful CoT's and interact with TAK servers
 
 ## Motivation
 This library was created to allow the generation and push of CoT's to TAK servers. Goals:
