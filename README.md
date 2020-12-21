@@ -1,6 +1,21 @@
 # takpak
 Python Library and sample code to create useful CoT's and interact with TAK servers
 
+## Depreciated
+
+TAKPAK was a simple proof of concept and initially useful to play with sending CoT events to a TAK server.
+
+Greg Albrecht (ampledata) has since updated some of his old code and significantly extended it to the point that my recommendation would be to use his code for any serious interaction with TAK servers.
+It can be found at:
+
+https://github.com/ampledata/pytak
+
+Pytak is more robust than that it has a proper queue and worker processes rather than the simple loops that takpak uses.
+
+He also has several useful gateway examples and a comprehensive CoT serilizer.
+
+I'm going to leave TAKPAK available as it's CoT generator is very simple and still might be useful for some use cases.
+
 ## Motivation
 This library was created to allow the generation and send/receive of CoT's to TAK servers. Goals:
 * Do so in a way that does not break or put unusual loads on the servers. (ATAK client interaction with the server was the example followed)
